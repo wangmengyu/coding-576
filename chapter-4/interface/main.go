@@ -41,6 +41,14 @@ func main() {
 	tk := c.(*Trunk)
 	tk.Drive()
 
-	tt := c.(ITrafficTool)
+	tt := c.(ITrafficTool) // 可以从一种接口转换成另一种接口
 	fmt.Printf("%+v, %T\n", tt, tt)
+	switch c.(type) {
+	case ICar:
+		fmt.Println("id ICar")
+	case ITrafficTool:
+		fmt.Println("is ITrafficTool")
+	default:
+
+	}
 }
