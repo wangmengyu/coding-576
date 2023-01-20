@@ -14,6 +14,14 @@ type S2 struct {
 	num2 int32 // 4字节
 }
 
+type User struct {
+	A int32
+	B []int32
+	C string
+	D bool
+	E struct{}
+}
+
 func main() {
 	// s1的值占用的空间
 	fmt.Println(unsafe.Sizeof(S1{})) // 8字节
@@ -26,4 +34,8 @@ func main() {
 	fmt.Printf("int16 size of:%d align:%d \n", unsafe.Sizeof(int16(0)), unsafe.Alignof(int16(0)))
 	fmt.Printf("int32 size of:%d align:%d \n", unsafe.Sizeof(int32(0)), unsafe.Alignof(int32(0)))
 	fmt.Printf("int64 size of:%d align:%d \n", unsafe.Sizeof(int64(0)), unsafe.Alignof(int64(0)))
+	fmt.Printf("[]int32 size of:%d align:%d \n", unsafe.Sizeof([]int32{}), unsafe.Alignof([]int32{}))
+	fmt.Printf("string size of:%d align:%d \n", unsafe.Sizeof(""), unsafe.Alignof(""))
+	fmt.Printf("user size of : %d align: %d", unsafe.Sizeof(User{}), unsafe.Alignof(User{}))
+
 }
