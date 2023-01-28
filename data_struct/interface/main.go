@@ -22,7 +22,7 @@ func (t *Trunk) Drive() { // 实现car的drive接口.
 func main() {
 	// 定义一个ICAR的接口变量
 	var c ICar = &Trunk{Model: "123"}
-	fmt.Println("%T", c) // 双击shift查询iface查看, 选择Type类型, 可看到地一个就是
+	fmt.Printf("%T\n", c) // 它是 *main.Trunk, 本质是 iface 查看, 选择Type类型, 可看到地一个就是
 	/**
 	type iface struct {
 		tab  *itab //
