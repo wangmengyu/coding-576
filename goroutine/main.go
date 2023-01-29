@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 // 定义3个方嵌套调用
@@ -22,6 +23,7 @@ func main() {
 	// 开启协程, 执行do1
 	go do1()
 
-	select {}
+	time.Sleep(1 * time.Second)
 
+	fmt.Println("done")
 }
