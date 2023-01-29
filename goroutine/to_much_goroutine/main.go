@@ -6,13 +6,12 @@ import (
 	"time"
 )
 
-// 打印i并且停止一秒
 func do(i int) {
 	fmt.Println(i)
-	time.Sleep(time.Second)
+	time.Sleep(1 * time.Second)
 }
 func main() {
-	//起很多协程都执行do方法
+	// 起math.MaxInt32个协程执行方法
 	for i := 0; i < math.MaxInt32; i++ {
 		go do(i)
 	}
