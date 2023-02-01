@@ -15,8 +15,8 @@ func main() {
 
 }
 
-func watch(ch chan int) { //  不需要循环.因为管道一直被监听.
+func watch(ch chan int) {
 	if <-ch == 1 {
-		fmt.Println("it is one")
+		fmt.Println("听到了1")
 	}
 }

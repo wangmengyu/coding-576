@@ -2,55 +2,49 @@ package main
 
 import (
 	"fmt"
-	"sync"
+	"math/rand"
+	"time"
 )
 
-// 使用 channel 开发一个基本的互斥锁
-// 思路: channel 本身就是一种锁概念, 当被存入数据的时候 没有人消耗会阻塞.
-// 当消耗的掉的时候.就解除了锁定.
-
-// MyMutex 定义锁结构体, 一个空结构体的channel
+// MyMutex 用channel实现一个Mutex
 type MyMutex chan struct{}
 
+func NewMutex() MyMutex {
+	m := make(chan struct{}, 1) // 同时进行的协程只能有一个
+	return m
+}
+
 func (m *MyMutex) Lock() {
-	(*m) <- struct{}{}
+	*m <- struct{}{}
 }
 
 func (m *MyMutex) UnLock() {
-	<-(*m)
+	<-*m
 }
 
-// NewMyMutex 新建锁
-func NewMyMutex() MyMutex {
-	ch := make(chan struct{}, 1)
-	return ch
+type DemoData struct {
+	num  int
+	lock MyMutex
 }
 
-type Data struct {
-	mutex MyMutex
-	val   int
+func (dd *DemoData) Add(done chan struct{}) {
+	dd.lock.Lock()
+	defer dd.lock.UnLock() // 解锁
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(3000)))
+	dd.num++
+	fmt.Println(dd.num)
+	done <- struct{}{}
 }
 
 func main() {
-	// 使用锁
-	d := &Data{
-		mutex: NewMyMutex(),
-		val:   0,
-	}
-	wg := sync.WaitGroup{}
-	wg.Add(1000)
-	for i := 1; i <= 1000; i++ {
-		go d.addOne(&wg)
-	}
-	wg.Wait()
-	fmt.Println("done")
-}
 
-func (d *Data) addOne(wg *sync.WaitGroup) {
-	d.mutex.Lock()
-	defer d.mutex.UnLock()
-	d.val = d.val + 1
-	fmt.Println(d.val)
-	wg.Done()
+	dd := DemoData{
+		num:  0,
+		lock: NewMutex(),
+	}
+	done := make(chan struct{})
+	for i := 0; i < 5; i++ {
+		go dd.Add(done)
+	}
 
 }
