@@ -7,13 +7,13 @@ import (
 )
 
 type Person struct {
-	mu     sync.RWMutex // 读写锁
+	mu     sync.RWMutex // 结构体中定义 读写锁
 	salary int          // 工资
 	level  int          // 等级
 }
 
 // promote 升值加薪
-func (p *Person) promote() {
+func (p *Person) promote() { // 写操作中使用 Lock 和 Unlock 来调用写锁的使用
 	p.mu.Lock()         // 操作之前加锁
 	defer p.mu.Unlock() // 习惯在lock之后加defer的解锁语句. 防止过程中出现panic.
 	p.salary = p.salary + 1000
@@ -25,7 +25,7 @@ func (p *Person) promote() {
 }
 
 // 打印个人信息, [纯读取]
-func (p *Person) printPerson() {
+func (p *Person) printPerson() { // 在读操作中使用 RLock 和 RUnlock 来控制读锁的使用
 	p.mu.RLock()         // 读取锁
 	defer p.mu.RUnlock() //读取解锁
 	fmt.Println(p.salary)
